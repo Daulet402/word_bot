@@ -41,10 +41,9 @@ public class WordBot extends TelegramLongPollingBot {
                     sendMessage = new SendMessage();
                 }
                 sendMessage.setChatId(update.getMessage().getChatId());
-                sendMessage.setText("Something went wrong");
+                sendMessage.setText("Something went wrong. Please try later");
             }
         }
-
         try {
             if (Objects.nonNull(sendMessage)) {
                 this.sendApiMethod(sendMessage);

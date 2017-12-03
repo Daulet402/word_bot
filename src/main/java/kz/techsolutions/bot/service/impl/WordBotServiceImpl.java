@@ -61,6 +61,7 @@ public class WordBotServiceImpl implements WordBotService {
                 String username = Objects.nonNull(update.getMessage().getFrom()) ?
                         update.getMessage().getFrom().getUserName() : null;
                 String text = Objects.nonNull(update.getMessage().getText()) ? update.getMessage().getText() : "";
+                log.info(String.format("text: %s from: %s", text, username));
 
                 if (Objects.equals(wordBotConstants.getStartText(), update.getMessage().getText())) {
                     sendMessage.setText(String.format(
