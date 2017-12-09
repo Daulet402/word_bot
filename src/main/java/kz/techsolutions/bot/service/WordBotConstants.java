@@ -72,6 +72,9 @@ public class WordBotConstants {
     @Value("${greetingResponse}")
     private String greetingResponse;
 
+    @Value("${defaultMessage}")
+    private String defaultMessage;
+
     public String getBackToMenuText() {
         try {
             return new String(backToMenuText.getBytes("ISO-8859-1"), "UTF-8");

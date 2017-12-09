@@ -5,6 +5,7 @@ import kz.techsolutions.bot.api.WordBotService;
 import kz.techsolutions.bot.api.exception.BotAppException;
 import kz.techsolutions.bot.service.WordBotConstants;
 import kz.techsolutions.bot.utils.WordBotUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,7 +74,7 @@ public class WordBotServiceImpl implements WordBotService {
                     sendMessage.setText(wordBotConstants.getWordsResponse());
                     sendMessage.setReplyMarkup(wordsMenu);
                 } else if (Objects.equals(wordBotConstants.getWordsWithTranslationsText(), text)) {
-                    sendMessage.setText(learnWordsService.getNextWordWithTranslation(username));
+                    sendMessage.setText(setMessageOrDefaultMessage(learnWordsService.getNextWordWithTranslation(username)));
                 } else if (Objects.equals(wordBotConstants.getAllCacheText(), text)) {
                     sendMessage.setText(String.valueOf(learnWordsService.getCache()));
                 } else if (Objects.equals(wordBotConstants.getMyCacheText(), text)) {
@@ -103,12 +104,12 @@ public class WordBotServiceImpl implements WordBotService {
                     sendMessage.setText(wordBotConstants.getMainMenuResponse());
                     sendMessage.setReplyMarkup(mainMenu);
                 } else if (Objects.equals(wordBotConstants.getWordInEnglishText(), text)) {
-                    sendMessage.setText(learnWordsService.getNextWordInEnglish(username));
+                    sendMessage.setText(setMessageOrDefaultMessage(learnWordsService.getNextWordInEnglish(username)));
                 } else if (Objects.equals(wordBotConstants.getWordInRussianText(), text)) {
                     String word = learnWordsService.getNextWordInRussian(username);
-                    sendMessage.setText(word);
+                    sendMessage.setText(setMessageOrDefaultMessage(word));
                 } else if (Objects.equals(wordBotConstants.getRandomWordsText(), text)) {
-                    sendMessage.setText(learnWordsService.getRandomWordInEnglish(username));
+                    sendMessage.setText(setMessageOrDefaultMessage(learnWordsService.getRandomWordInEnglish(username)));
                 } else {
                     sendMessage.setText(wordBotConstants.getUnknownCommandResponse());
                 }
@@ -119,6 +120,10 @@ public class WordBotServiceImpl implements WordBotService {
             throw new BotAppException(e);
         }
         return null;
+    }
+
+    private String setMessageOrDefaultMessage(String message) {
+        return StringUtils.isNotEmpty(message) ? message : wordBotConstants.getDefaultMessage();
     }
 
     @Override
