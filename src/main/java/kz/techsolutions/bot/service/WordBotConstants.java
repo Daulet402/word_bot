@@ -6,6 +6,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 @Getter
@@ -75,6 +78,18 @@ public class WordBotConstants {
     @Value("${defaultMessage}")
     private String defaultMessage;
 
+    @Value("${setLineMessagePattern}")
+    private String setLineMessagePattern;
+
+    @Value("#{'${adminUserNames}'.split(',')}")
+    private List<String> adminUserNames;
+
+    @Value("${cacheUpdatedMessage}")
+    private String cacheUpdatedMessage;
+
+    @Value("${invalidNumberResponse}")
+    private String invalidNumberResponse;
+
     public String getBackToMenuText() {
         try {
             return new String(backToMenuText.getBytes("ISO-8859-1"), "UTF-8");
@@ -89,5 +104,9 @@ public class WordBotConstants {
         } catch (UnsupportedEncodingException e) {
             return randomWordsText;
         }
+    }
+
+    public List<String> getAdminUserNames() {
+        return Objects.nonNull(adminUserNames) ? adminUserNames : Collections.EMPTY_LIST;
     }
 }

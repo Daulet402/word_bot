@@ -6,6 +6,7 @@ import kz.techsolutions.bot.api.dto.UserCacheDTO;
 import kz.techsolutions.bot.api.dto.WorkLanguage;
 import kz.techsolutions.bot.api.exception.BotAppException;
 import kz.techsolutions.bot.service.WordBotConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,6 +66,9 @@ public class LearnWordsServiceImpl implements LearnWordsService {
         userCacheDTO.setCurrentLang(WorkLanguage.ENGLISH);
         if (Objects.isNull(userCacheDTO.getRussianTranslation())) {
             String line = getLineAndUpdateCache(username);
+            if (StringUtils.isEmpty(line) || line.split("-").length != 2) {
+                return noCacheMessage;
+            }
             String[] translations = line.split("-");
             String russianTranslation = translations[1];
             userCacheDTO.setRussianTranslation(russianTranslation);
@@ -87,6 +91,9 @@ public class LearnWordsServiceImpl implements LearnWordsService {
         userCacheDTO.setCurrentLang(WorkLanguage.RUSSIAN);
         if (Objects.isNull(userCacheDTO.getEnglishTranslation())) {
             String line = getLineAndUpdateCache(username);
+            if (StringUtils.isEmpty(line) || line.split("-").length != 2) {
+                return noCacheMessage;
+            }
             String[] translations = line.split("-");
             String englishTranslation = translations[0];
             userCacheDTO.setEnglishTranslation(englishTranslation);
@@ -164,6 +171,13 @@ public class LearnWordsServiceImpl implements LearnWordsService {
         userCacheDTO.setLastLine(lastLine + 1);
         userCache.put(username, userCacheDTO);
         return line;
+    }
+
+    @Override
+    public void setLastLine(String username, int line) throws BotAppException {
+        UserCacheDTO userCacheDTO = getCacheInternal(username);
+        userCacheDTO.setLastLine(line);
+        userCache.put(username, userCacheDTO);
     }
 
     private UserCacheDTO getCacheInternal(String username) {

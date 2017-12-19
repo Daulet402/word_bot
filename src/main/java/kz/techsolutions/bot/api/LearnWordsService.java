@@ -28,4 +28,6 @@ public interface LearnWordsService {
     UserCacheDTO getCacheByUsername(@NotNull String username) throws BotAppException;
 
     String getLineAndUpdateCache(String username) throws BotAppException;
+
+    void setLastLine(@NotNull String username, int line) throws BotAppException;
 }

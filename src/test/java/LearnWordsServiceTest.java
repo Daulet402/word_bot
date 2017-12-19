@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.CollectionUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -121,6 +122,16 @@ public class LearnWordsServiceTest {
             System.out.println("success for " + file);
         }
         assertEquals(count.longValue(), files.size());
+    }
+
+    @Test
+    public void testSetLineMEthod() throws Exception {
+        learnWordsService.setLastLine("daulet", 25);
+    }
+
+    @Test
+    public void testAdminUserNames() throws Exception {
+        assertTrue(!CollectionUtils.isEmpty(botConstants.getAdminUserNames()));
     }
 }
 

@@ -110,6 +110,15 @@ public class WordBotServiceImpl implements WordBotService {
                     sendMessage.setText(setMessageOrDefaultMessage(word));
                 } else if (Objects.equals(wordBotConstants.getRandomWordsText(), text)) {
                     sendMessage.setText(setMessageOrDefaultMessage(learnWordsService.getRandomWordInEnglish(username)));
+                } else if (wordBotConstants.getAdminUserNames().contains(username)
+                        && text.contains(wordBotConstants.getSetLineMessagePattern())) {
+                    try {
+                        learnWordsService.setLastLine(username, Integer.parseInt(text.split(" ")[0]));
+                        sendMessage.setText(wordBotConstants.getCacheUpdatedMessage());
+                    } catch (NumberFormatException e) {
+                        log.error(e.getMessage());
+                        sendMessage.setText(wordBotConstants.getInvalidNumberResponse());
+                    }
                 } else {
                     sendMessage.setText(wordBotConstants.getUnknownCommandResponse());
                 }
