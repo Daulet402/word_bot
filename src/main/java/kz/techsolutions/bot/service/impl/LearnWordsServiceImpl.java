@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +67,7 @@ public class LearnWordsServiceImpl implements LearnWordsService {
         userCacheDTO.setCurrentLang(WorkLanguage.ENGLISH);
         if (Objects.isNull(userCacheDTO.getRussianTranslation())) {
             String line = getLineAndUpdateCache(username);
-            if (StringUtils.isEmpty(line) || line.split("-").length != 2) {
+            if (StringUtils.isEmpty(line) || !line.contains("-")) {
                 return noCacheMessage;
             }
             String[] translations = line.split("-");
@@ -91,7 +92,7 @@ public class LearnWordsServiceImpl implements LearnWordsService {
         userCacheDTO.setCurrentLang(WorkLanguage.RUSSIAN);
         if (Objects.isNull(userCacheDTO.getEnglishTranslation())) {
             String line = getLineAndUpdateCache(username);
-            if (StringUtils.isEmpty(line) || line.split("-").length != 2) {
+            if (StringUtils.isEmpty(line) || !line.contains("-")) {
                 return noCacheMessage;
             }
             String[] translations = line.split("-");
@@ -125,7 +126,8 @@ public class LearnWordsServiceImpl implements LearnWordsService {
         return line;
     }
 
-    @Override // TODO: 12/3/17 Add Spring cache
+    @Override
+    @Cacheable("filesCache")
     public List<String> getFileList() throws BotAppException {
         List<String> fileNames = new ArrayList<>();
         try (Stream<Path> paths = Files.list(Paths.get(filesDirectory))) {
